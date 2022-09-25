@@ -1,0 +1,100 @@
+- name: "Install docker on localhost"
+  hosts: localhost
+  become: yes
+
+  tasks:
+  - name: uninstall Docker
+    yum: 
+      name: docker 
+      state: absent
+
+  - name: uninstall podman
+    yum: 
+      name: podman 
+      state: absent
+
+  - name: Install pre-requisite packages
+    yum:
+      name: "{{item}}"
+      state: latest
+    loop:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+
+  - name: Add Docker CE repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: Install Docker
+    yum: 
+      name: docker 
+      state: latest
+
+  - name: Start and enable the Docker daemon
+    service: 
+      name: podman 
+      state: started
+      enabled: yes
+
+---
+- name: "Install jenkins on localhost"
+  hosts: localhost
+  become: yes
+  vars:
+     java_yum_package: java-1.8.0-openjdk
+  tasks:
+  - name: uninstall Docker
+    yum:
+      name: docker
+      state: absent
+
+  - name: uninstall podman
+    yum:
+      name: podman
+      state: absent
+
+  - name: Install Java package (CentOS/RHEL)
+    yum:
+      name: "{{java_yum_package}}"
+      state: present
+      update_cache: yes
+    when: ansible_os_family == 'RedHat'
+
+  - name: Ensure Jenkins is Installed
+    yum :
+      name: jenkins
+      state: absent
+      update_cache: yes
+
+  - name: Ensure Jenkins Repository is Installed
+    yum_repository:
+      name: jenkins
+      state: present
+      description: Official Jenkins Yum Repo
+      baseurl: http://pkg.jenkins.io/redhat
+      gpgkey: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+      gpgcheck: yes
+      enabled: yes
+
+  - name: Ensure Jenkins is Installed
+    yum :
+      name: jenkins
+      update_cache: yes
+      state: present
+
+  - name: Enable and Start the Jenkins Service
+    service:
+      name: jenkins
+      enabled: yes
+      state: started
+
+  - name: Open Firewall Port
+    firewalld:
+      zone: public
+      port: 8080/tcp
+      permanent: true
+      state: enabled
+      immediate: true
+
