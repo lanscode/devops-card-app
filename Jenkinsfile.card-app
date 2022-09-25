@@ -3,7 +3,7 @@ pipeline{
  stages{
     stage("build test and package"){
        steps{
-          sh "mvn clean install"
+       //   sh "mvn clean install"
           sh "mvn test"
           sh "mvn package"
        }
@@ -13,11 +13,11 @@ pipeline{
          }
        }
     }
-    stage("Run ansible management job"){
+    /*stage("Run ansible management job"){
        steps{
 			        build job:'card-app-deployment'
 			        }
-    }
+    }*/
 
  }
 }
