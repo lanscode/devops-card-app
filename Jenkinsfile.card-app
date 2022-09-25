@@ -3,11 +3,11 @@ pipeline{
  stages{
     stage("build test and package"){
        steps{
-          bat "mvn clean package"
+          bat "mvn clean install test package"
        }
        post{
          success{
-            archiveArtifacts: artifacts: '**/*.war'
+            archiveArtifacts: artifacts: "**/*.war"
          }
        }
     }
