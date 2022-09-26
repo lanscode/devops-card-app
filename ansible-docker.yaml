@@ -1,0 +1,13 @@
+- name: Run docker image
+  hosts: localhost
+  remote_user: ansadmin
+
+  tasks:
+    - name: remove docker image
+      command: docker image rm -f card-app:latest
+
+    - name: create docker image
+      command: docker builb -t card-app .
+
+    - name: deploy the container
+      command: docker run -d -p 8082:80 --name payment-card-app card-app
