@@ -7,7 +7,7 @@
       ignore_errors: yes
 
     - name: create docker image
-      command: docker build -t card-app .
+      command: docker build -t card-app:1.0 .
 
     - name: deploy the container
       command: docker run -d -p 8082:80 --name payment-card-app card-app
