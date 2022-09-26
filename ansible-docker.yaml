@@ -5,6 +5,7 @@
   tasks:
     - name: remove docker image
       command: docker image rm -f card-app:latest
+      ignore_errors: yes
 
     - name: create docker image
       command: docker builb -t card-app .
