@@ -1,6 +1,5 @@
 - name: Run docker image
   hosts: localhost
-  remote_user: ansadmin
 
   tasks:
     - name: remove docker image
